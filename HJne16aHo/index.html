@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>VPS服务器24小时Ping值延迟监测工具 | 小海哥Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://141612.xyz/favicon.ico?v=1707206282958">
+<link rel="stylesheet" href="https://141612.xyz/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="依赖安装
+Debian/Ubuntu
+apt-get update
+
+apt-get install python wget screen -y
+
+CentOS/RHEL
+yum install screen wget python -y
+..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://141612.xyz">
+        <img src="https://141612.xyz/images/avatar.png?v=1707206282958" class="site-logo">
+        <h1 class="site-title">小海哥Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      [<a href="https://t.me/dapoolsea" target="_blank">Telegram</a>|<a href="https://suo.re" target="_blank">热缩-短网址</a>|<a href="https://1120.ren" target="_blank">博客+1</a>|<a href="https://212.ee" target="_blank">导航+1</a>|<a href="https://github.com/dapoolsea" target="_blank">github</a>]
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://141612.xyz/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">VPS服务器24小时Ping值延迟监测工具</h2>
+            <div class="post-date">2024-01-21</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="依赖安装">依赖安装</h3>
+<p><code>Debian</code>/<code>Ubuntu</code></p>
+<pre><code class="language-yaml">apt-get update
+
+apt-get install python wget screen -y
+</code></pre>
+<p><code>CentOS</code>/<code>RHEL</code></p>
+<pre><code class="language-yaml">yum install screen wget python -y
+</code></pre>
+<h3 id="使用方法">使用方法</h3>
+<pre><code class="language-yaml">screen -S uping
+
+wget -N --no-check-certificate https://raw.githubusercontent.com/FunctionClub/uPing/master/uping.py
+
+python uping.py
+</code></pre>
+<p><strong>提示：第一次使用如果出现乱码，退出后重新输入python uping.py即可；</strong></p>
+<h3 id="界面预览">界面预览</h3>
+<figure data-type="image" tabindex="1"><img src="https://img.212.ee/i/2022/11/04/034352-0.webp" alt="" loading="lazy"></figure>
+<h3 id="操作说明">操作说明</h3>
+<p><strong>退出界面：</strong><code>Ctrl + A + D</code><br>
+<strong>进入界面：</strong><code>screen -r uping</code><br>
+<strong>退出程序：</strong><code>Ctrl + C</code><br>
+<strong>查看screen进程：</strong><code>screen -ls</code><br>
+<strong>结束screen程序：</strong><code>exit</code></p>
+<p><strong>GitHub:</strong><a href="https://github.com/FunctionClub/uPing">https://github.com/FunctionClub/uPing</a></p>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://141612.xyz/D4QIyUTXD/">
+                  <h3 class="post-title">
+                    常用软件下载(持续更新)
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>

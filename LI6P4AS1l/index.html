@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Debian apt源 | 小海哥Blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://141612.xyz/favicon.ico?v=1707206282958">
+<link rel="stylesheet" href="https://141612.xyz/styles/main.css">
+
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="
+如有必要请在修改的覆盖的操作前做好备份, 下面内容可按需复制或抄写，比如我一般只用中科大源
+
+1. 修改文件 /etc/apt/sources.list 为下面内容
+
+下面内容中默认开启了中科大的源，请根据自己需求决定使用哪个源。 方法：..." />
+    <meta name="keywords" content="" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://141612.xyz">
+        <img src="https://141612.xyz/images/avatar.png?v=1707206282958" class="site-logo">
+        <h1 class="site-title">小海哥Blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      [<a href="https://t.me/dapoolsea" target="_blank">Telegram</a>|<a href="https://suo.re" target="_blank">热缩-短网址</a>|<a href="https://1120.ren" target="_blank">博客+1</a>|<a href="https://212.ee" target="_blank">导航+1</a>|<a href="https://github.com/dapoolsea" target="_blank">github</a>]
+    </div>
+    <div class="site-footer">
+      Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://141612.xyz/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Debian apt源</h2>
+            <div class="post-date">2024-01-21</div>
+            
+            <div class="post-content" v-pre>
+              <blockquote>
+<p><strong>如有必要请在修改的覆盖的操作前做好备份, 下面内容可按需复制或抄写，比如我一般只用中科大源</strong></p>
+</blockquote>
+<h3 id="1-修改文件-etcaptsourceslist-为下面内容">1. 修改文件 /etc/apt/sources.list 为下面内容</h3>
+<ul>
+<li><strong>下面内容中默认开启了中科大的源，请根据自己需求决定使用哪个源。 方法： 直接取消注释就好</strong></li>
+</ul>
+<pre><code class="language-bash"># Debian 10 buster
+
+# 中科大源
+
+deb http://mirrors.ustc.edu.cn/debian buster main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian buster-updates main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian buster-backports main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian-security/ buster/updates main contrib non-free
+
+# deb-src http://mirrors.ustc.edu.cn/debian buster main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian buster-updates main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian buster-backports main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian-security/ buster/updates main contrib non-free
+
+# 官方源
+
+# deb http://deb.debian.org/debian buster main contrib non-free
+# deb http://deb.debian.org/debian buster-updates main contrib non-free
+# deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+
+# deb-src http://deb.debian.org/debian buster main contrib non-free
+# deb-src http://deb.debian.org/debian buster-updates main contrib non-free
+# deb-src http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+
+# 网易源
+
+# deb http://mirrors.163.com/debian/ buster main non-free contrib
+# deb http://mirrors.163.com/debian/ buster-updates main non-free contrib
+# deb http://mirrors.163.com/debian/ buster-backports main non-free contrib
+# deb http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
+
+# deb-src http://mirrors.163.com/debian/ buster main non-free contrib
+# deb-src http://mirrors.163.com/debian/ buster-updates main non-free contrib
+# deb-src http://mirrors.163.com/debian/ buster-backports main non-free contrib
+# deb-src http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
+
+# 阿里云
+
+# deb http://mirrors.aliyun.com/debian/ buster main non-free contrib
+# deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+# deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+# deb http://mirrors.aliyun.com/debian-security buster/updates main
+
+# deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian-security buster/updates main
+</code></pre>
+<h3 id="2-直接用此文件覆盖掉源">2. 直接用此文件覆盖掉源</h3>
+<ul>
+<li><strong>更新软件列表并更新软件</strong></li>
+</ul>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+</code></pre>
+
+            </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://141612.xyz/HJne16aHo/">
+                  <h3 class="post-title">
+                    VPS服务器24小时Ping值延迟监测工具
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+  <script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+  <script>
+    hljs.initHighlightingOnLoad()
+  </script>
+
+
+
+
+
+  </body>
+</html>
