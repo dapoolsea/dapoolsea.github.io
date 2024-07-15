@@ -1,0 +1,195 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>VPS 常用命令 | 小海哥Blog</title>
+<meta name="description" content="[&lt;a href=&#34;https://t.me/dapoolsea&#34; target=&#34;_blank&#34;&gt;Telegram&lt;/a&gt;|&lt;a href=&#34;https://1120.ren&#34; target=&#34;_blank&#34;&gt;博客+1&lt;/a&gt;|&lt;a href=&#34;https://212.ee&#34; target=&#34;_blank&#34;&gt;导航+1&lt;/a&gt;|&lt;a href=&#34;https://github.com/dapoolsea&#34; target=&#34;_blank&#34;&gt;github&lt;/a&gt;]">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://dapoolsea.github.io/favicon.ico?v=1721054013775">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://dapoolsea.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://dapoolsea.github.io">
+        <img class="avatar" src="https://dapoolsea.github.io/images/avatar.png?v=1721054013775" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://dapoolsea.github.io">
+        <h1 class="site-title">小海哥Blog</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">VPS 常用命令</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-01-23</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h4 id="dd网络重装脚本">DD网络重装脚本</h4>
+<p>moeclub大佬的脚本</p>
+<pre><code>bash &lt;(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -d 12 -v 64 -p 密码 -port 端口 -a -firmware
+</code></pre>
+<hr>
+<h4 id="服务器综合测试脚本融合怪">服务器综合测试脚本(融合怪)</h4>
+<pre><code>curl -L https://gitlab.com/spiritysdx/za/-/raw/main/ecs.sh -o ecs.sh &amp;&amp; chmod +x ecs.sh &amp;&amp; bash ecs.sh
+</code></pre>
+<hr>
+<h4 id="一键开启bbr">一键开启BBR</h4>
+<p>(适用于较新的Debian、Ubuntu)</p>
+<pre><code>echo &quot;net.core.default_qdisc=fq&quot; &gt;&gt; /etc/sysctl.conf
+echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &gt;&gt; /etc/sysctl.conf
+sysctl -p
+sysctl net.ipv4.tcp_available_congestion_control
+lsmod | grep bbr
+</code></pre>
+<hr>
+<h4 id="系统更新插件安装">系统更新&amp;插件安装</h4>
+<pre><code>apt-get update &amp;&amp; apt-get install -y wget vim sudo curl wget nano telnet
+</code></pre>
+<hr>
+<h4 id="切换时区">切换时区</h4>
+<pre><code>sudo timedatectl set-timezone Asia/Shanghai
+sudo timedatectl set-timezone America/Los_Angeles
+</code></pre>
+<hr>
+<h4 id="xray-xui搭建">xray-xui搭建</h4>
+<pre><code>bash &lt;(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)
+</code></pre>
+<h4 id="超售测试脚本">超售测试脚本</h4>
+<pre><code>wget --no-check-certificate -O memoryCheck.sh https://raw.githubusercontent.com/uselibrary/memoryCheck/main/memoryCheck.sh &amp;&amp; chmod +x memoryCheck.sh &amp;&amp; bash memoryCheck.sh
+</code></pre>
+<h4 id="移除virtio_balloon模块">移除virtio_balloon模块</h4>
+<pre><code>rmmod virtio_balloon
+</code></pre>
+<h4 id="moerats大佬的添加swap脚本">moerats大佬的添加swap脚本</h4>
+<pre><code>wget https://www.moerats.com/usr/shell/swap.sh &amp;&amp; bash swap.sh
+</code></pre>
+<h4 id="测试-ipv4-优先还是-ipv6-优先">测试 IPv4 优先还是 IPv6 优先</h4>
+<pre><code>curl ip.p3terx.com
+</code></pre>
+<h4 id="三网测速">三网测速</h4>
+<p>hyperspeed （未开源）</p>
+<pre><code>bash &lt;(curl -Lso- https://bench.im/hyperspeed)
+</code></pre>
+<p>AutoTrace 三网回程线路显示</p>
+<pre><code>wget -N --no-check-certificate https://raw.githubusercontent.com/Chennhaoo/Shell_Bash/master/AutoTrace.sh &amp;&amp; chmod +x AutoTrace.sh &amp;&amp; bash AutoTrace.sh
+</code></pre>
+<p>backtrace 三网回程线路直接显示（小白用这个）</p>
+<pre><code>curl https://raw.githubusercontent.com/zhanghanyun/backtrace/main/install.sh -sSf | sh
+</code></pre>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://dapoolsea.github.io/PlBT0KYRt/">
+              <h3 class="post-title">
+                下一篇：Docker常用命令
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">[<a href="https://t.me/dapoolsea" target="_blank">Telegram</a>|<a href="https://1120.ren" target="_blank">博客+1</a>|<a href="https://212.ee" target="_blank">导航+1</a>|<a href="https://github.com/dapoolsea" target="_blank">github</a>]</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://dapoolsea.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

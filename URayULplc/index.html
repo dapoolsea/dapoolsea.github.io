@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>使用国内服务器中转流量 | 小海哥Blog</title>
+<meta name="description" content="[&lt;a href=&#34;https://t.me/dapoolsea&#34; target=&#34;_blank&#34;&gt;Telegram&lt;/a&gt;|&lt;a href=&#34;https://1120.ren&#34; target=&#34;_blank&#34;&gt;博客+1&lt;/a&gt;|&lt;a href=&#34;https://212.ee&#34; target=&#34;_blank&#34;&gt;导航+1&lt;/a&gt;|&lt;a href=&#34;https://github.com/dapoolsea&#34; target=&#34;_blank&#34;&gt;github&lt;/a&gt;]">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://dapoolsea.github.io/favicon.ico?v=1721054013775">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://dapoolsea.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://dapoolsea.github.io">
+        <img class="avatar" src="https://dapoolsea.github.io/images/avatar.png?v=1721054013775" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://dapoolsea.github.io">
+        <h1 class="site-title">小海哥Blog</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">使用国内服务器中转流量</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-01-21</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <blockquote>
+<p>经本人亲身实践，通过国内服务器转发科学上网流量不仅能有效避免墙的干扰，还有加速的作用。流量转发说白了就是流量从“国内&lt;–&gt;境外vps”变成了“国内&lt;–&gt;国内vps&lt;–&gt;境外vps”。看似多了一步，其实大有好处：国内服务器延迟很低，但出入境流量走高级线路，加起来一算总延迟实际上降低了；此外选择好的中转服务器，高峰时期也能跑满带宽，爽的一批。</p>
+</blockquote>
+<blockquote>
+<p>中转属于 硬件加速 ，代价是额外需要一台国内的服务器，优点是更稳定、能（比较）有效防止境外ip或端口被封。一些付费工具的高级线路也使用中转，以提供更优质的体验。</p>
+</blockquote>
+<blockquote>
+<p>本教程详细介绍转发的过程，如有不明白的地方，欢迎留言讨论。</p>
+</blockquote>
+<blockquote>
+<p><strong>配置国内服务器中转流量</strong><br>
+既然要通过国内服务器转发流量，首先必须要一台国内服务器。国内服务器的选择有很多，建议使用NAT VPS，年付几十到一两百，NAT VPS中转请参考：使用NAT VPS中转加速。也可以用阿里云、腾讯云这些大厂商的服务器，质量和服务都比较有保障。由于服务器仅做流量转发用，买最低配置的就可以，1核256m内存足够，看视频的话带宽买大点，也可以选择流量计费模式（不适合视频党）。</p>
+</blockquote>
+<blockquote>
+<p>本文以CentOS 7/8系统为例介绍国内服务器中转配置，分别介绍firewalld流量转发和nginx流量转发两种方式。</p>
+</blockquote>
+<h3 id="1-firewalld流量转发">1. firewalld流量转发</h3>
+<p><code>firewalld</code>是CentOS7/8默认的防火墙前端软件，绝大多数主机商提供的镜像都已经安装。如果执行 <code>firewall-cmd --state</code>的输出不是 running，请使用下面命令安装并开启 <code>firewalld</code>：</p>
+<pre><code class="language-yaml">yum install -y firewalld
+systemctl enable firewalld
+systemctl start firewalld
+</code></pre>
+<ul>
+<li>接着配置转发。假设你将国内服务器8080端口流量转发到国外vps的443端口，转发命令如下：</li>
+</ul>
+<pre><code class="language-yaml">echo 'net.ipv4.ip_forward = 1' &gt;&gt; /etc/sysctl.conf
+sysctl -p
+firewall-cmd --permanent --add-masquerade
+# 8080可以改成其他端口
+firewall-cmd --permanent --add-port=8080/tcp
+firewall-cmd --permanent --add-port=8080/udp
+# 8080和上面保持一致，国外ip改成你国外vps的ip，443改成国外ss/ssr/v2ray等软件的端口
+firewall-cmd --permanent --add-forward-port=port=8080:proto=tcp:toaddr=国外ip:toport=443
+firewall-cmd --permanent --add-forward-port=port=8080:proto=udp:toaddr=国外ip:toport=443
+firewall-cmd --reload
+</code></pre>
+<ul>
+<li>运行上述命令后，打开ss/ssr/v2ray等客户端软件，把ip和端口 改成国内vps的ip和端口号，应该同样能正常上外网。</li>
+<li>如果中转trojan流量，记得把客户端配置文件中的两个verify选项设置为false</li>
+<li><code>firewalld</code>转发的好处是效率高，直接在内核执行。</li>
+</ul>
+<h3 id="2-nginx流量转发">2. Nginx流量转发</h3>
+<ul>
+<li>Nginx是非常强大的四层、七层反向代理软件，功能强大，在互联网上广泛应用。本节介绍Nginx转发配置。</li>
+</ul>
+<h4 id="首先安装nginx">首先安装nginx</h4>
+<pre><code class="language-yaml">yum install -y epel-release &amp;&amp; yum install -y nginx
+</code></pre>
+<h4 id="配置nginx编辑-etcnginxnginxconf文件加入转发配置">配置nginx：编辑 <code>/etc/nginx/nginx.conf</code>文件，加入转发配置：</h4>
+<pre><code class="language-yaml"># For more information on configuration, see:
+#   * Official English Documentation: http://nginx.org/en/docs/
+#   * Official Russian Documentation: http://nginx.org/ru/docs/
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+# Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+# 增加的配置
+stream {
+    server {
+        listen 端口号;  # 1-65535的任意一个数字，无需与境外服务器的端口号相同
+        proxy_pass 境外ip:境外端口号; # 用境外ip和端口号替换
+    }
+}
+# 转发配置结束
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+                      '$status $body_bytes_sent &quot;$http_referer&quot; '
+                      '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    ....
+}
+</code></pre>
+<ul>
+<li>配置中增加了以 stream 开头的那一段，其他都是自带的。将上面代码中的ip和端口换成你的，然后保存文件。用 <code>nginx -t</code>检查配置有没有错误，有如下输出说明配置正确：</li>
+</ul>
+<pre><code class="language-yaml">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+</code></pre>
+<ul>
+<li>如果有问题，请按照提示更改。</li>
+</ul>
+<h4 id="改好后设置开机启动并启动nginx">改好后设置开机启动并启动nginx</h4>
+<pre><code class="language-yaml">systemctl enable nginx &amp;&amp; systemctl start nginx。
+</code></pre>
+<p>接着用 <code>ss -ntlp| grep -i nginx</code>查看软件是否正常运行。如果输出为空，可能的问题是端口号冲突，改成其他端口号试试；或者是selinux的限制，用下面命令禁用selinux：</p>
+<pre><code class="language-yaml">sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
+setenforce 0
+</code></pre>
+<h3 id="如果服务器启动了防火墙放行nginx监听的端口-怎么看防火墙是否开启呢输入-firewall-cmd-state输出是running表示防火墙正在运行-用如下命令把端口放行">如果服务器启动了防火墙，放行nginx监听的端口。怎么看防火墙是否开启呢？输入 <code>firewall-cmd --state</code>，输出是”running”表示防火墙正在运行。用如下命令把端口放行：</h3>
+<pre><code class="language-yaml">firewall-cmd --permanent --add-port=nginx中配置的端口号/tcp
+fireawll-cmd --reload
+</code></pre>
+<h3 id="如果服务器厂商上层还有防火墙安全组阿里云腾讯云等购买的vps请记得到控制台放行相应端口">如果服务器厂商上层还有防火墙/安全组(阿里云/腾讯云等购买的vps)，请记得到控制台放行相应端口。</h3>
+<p>完成上述操作后，搭建手机、电脑上的ss/ssr/v2ray等客户端，把ip和端口 改成国内vps的ip和端口号，应该同样能正常上外网。</p>
+<p>如果中转trojan流量，记得把客户端配置文件中的两个verify选项设置为false!<br>
+Nginx效率不如firewalld/iptables，但是配置更灵活，使用上更便利。</p>
+<h3 id="配置境外服务器">配置境外服务器</h3>
+<p>原则上只要境外服务器没被墙或者端口没有被封，配置好国内服务器就直接能用且有加速效果。对境外服务器做配置，主要是为了降低墙的干扰，减少ip被墙的机率。如果你不清楚下面的操作，请不要做这一步！**</p>
+<p>配置境外服务器的重点：除ssh的22、正常服务的端口(例如网站)，其他端口只允许国内服务器连接。操作如下：**</p>
+<ol>
+<li><strong>启动系统防火墙：</strong><code>systemctl enable firewalld &amp;&amp; systemctl start firewalld</code></li>
+<li><strong>删除之前放行过的ss/ssr/v2ray等端口（如果配置过）：</strong><code>firewall-cmd --permanent --remove-port=端口/tcp</code></li>
+<li><strong>仅允许国内ip连接该服务器：</strong></li>
+</ol>
+<pre><code class="language-yaml">firewall-cmd --permanent --add-source=国内ip/32
+fireawll-cmd --reload
+</code></pre>
+<p>经过如上配置后，gfw探测你的vps，除了ssh、网站等常用端口，ss/ssr/v2ray的端口直接无法连接，被墙的概率自然就降低了。</p>
+<h3 id="其他">其他</h3>
+<p><strong>一些注意事项：</strong></p>
+<p>nginx支持转发流量到多个服务器实现负载均衡，配置上需要用到upstream块，请参考文档或留言；<br>
+如果用的是iptables，把firewalld命令替换成iptables命令执行就可以<br>
+如果动手能力强，最好把境外vps配置得像一个业务机器，例如一个有各种爬虫访问的网站，基本上就稳如狗了（本人用的就是这种）；<br>
+配置客户端时，ip和端口填国内服务器的，其他信息（密码、加密方式等）和国外服务器保持一致；<br>
+NAT VPS需要端口映射，因此客户端配置的ip和端口应该是NAT VPS映射获取到的公网ip和端口号。</p>
+<blockquote>
+<p>**本篇仅做收藏使用，原文转自: **<a href="https://212.ee/go/jf1IbtNT/">V2ray科技-使用国内服务器中转流量</a></p>
+</blockquote>
+
+          </div>
+        </div>
+
+        
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">[<a href="https://t.me/dapoolsea" target="_blank">Telegram</a>|<a href="https://1120.ren" target="_blank">博客+1</a>|<a href="https://212.ee" target="_blank">导航+1</a>|<a href="https://github.com/dapoolsea" target="_blank">github</a>]</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://dapoolsea.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

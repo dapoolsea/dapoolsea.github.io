@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>Debian apt源 | 小海哥Blog</title>
+<meta name="description" content="[&lt;a href=&#34;https://t.me/dapoolsea&#34; target=&#34;_blank&#34;&gt;Telegram&lt;/a&gt;|&lt;a href=&#34;https://1120.ren&#34; target=&#34;_blank&#34;&gt;博客+1&lt;/a&gt;|&lt;a href=&#34;https://212.ee&#34; target=&#34;_blank&#34;&gt;导航+1&lt;/a&gt;|&lt;a href=&#34;https://github.com/dapoolsea&#34; target=&#34;_blank&#34;&gt;github&lt;/a&gt;]">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://dapoolsea.github.io/favicon.ico?v=1721054013775">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://dapoolsea.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://dapoolsea.github.io">
+        <img class="avatar" src="https://dapoolsea.github.io/images/avatar.png?v=1721054013775" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://dapoolsea.github.io">
+        <h1 class="site-title">小海哥Blog</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">Debian apt源</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-01-21</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <blockquote>
+<p><strong>如有必要请在修改的覆盖的操作前做好备份, 下面内容可按需复制或抄写，比如我一般只用中科大源</strong></p>
+</blockquote>
+<h3 id="1-修改文件-etcaptsourceslist-为下面内容">1. 修改文件 /etc/apt/sources.list 为下面内容</h3>
+<ul>
+<li><strong>下面内容中默认开启了中科大的源，请根据自己需求决定使用哪个源。 方法： 直接取消注释就好</strong></li>
+</ul>
+<pre><code class="language-bash"># Debian 10 buster
+
+# 中科大源
+
+deb http://mirrors.ustc.edu.cn/debian buster main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian buster-updates main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian buster-backports main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian-security/ buster/updates main contrib non-free
+
+# deb-src http://mirrors.ustc.edu.cn/debian buster main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian buster-updates main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian buster-backports main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian-security/ buster/updates main contrib non-free
+
+# 官方源
+
+# deb http://deb.debian.org/debian buster main contrib non-free
+# deb http://deb.debian.org/debian buster-updates main contrib non-free
+# deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+
+# deb-src http://deb.debian.org/debian buster main contrib non-free
+# deb-src http://deb.debian.org/debian buster-updates main contrib non-free
+# deb-src http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+
+# 网易源
+
+# deb http://mirrors.163.com/debian/ buster main non-free contrib
+# deb http://mirrors.163.com/debian/ buster-updates main non-free contrib
+# deb http://mirrors.163.com/debian/ buster-backports main non-free contrib
+# deb http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
+
+# deb-src http://mirrors.163.com/debian/ buster main non-free contrib
+# deb-src http://mirrors.163.com/debian/ buster-updates main non-free contrib
+# deb-src http://mirrors.163.com/debian/ buster-backports main non-free contrib
+# deb-src http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
+
+# 阿里云
+
+# deb http://mirrors.aliyun.com/debian/ buster main non-free contrib
+# deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+# deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+# deb http://mirrors.aliyun.com/debian-security buster/updates main
+
+# deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian-security buster/updates main
+</code></pre>
+<h3 id="2-直接用此文件覆盖掉源">2. 直接用此文件覆盖掉源</h3>
+<ul>
+<li><strong>更新软件列表并更新软件</strong></li>
+</ul>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+</code></pre>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://dapoolsea.github.io/HJne16aHo/">
+              <h3 class="post-title">
+                下一篇：VPS服务器24小时Ping值延迟监测工具
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">[<a href="https://t.me/dapoolsea" target="_blank">Telegram</a>|<a href="https://1120.ren" target="_blank">博客+1</a>|<a href="https://212.ee" target="_blank">导航+1</a>|<a href="https://github.com/dapoolsea" target="_blank">github</a>]</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://dapoolsea.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

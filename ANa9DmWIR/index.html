@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    
+<meta charset="utf-8" >
+
+<title>使用CloudFlare白嫖阿里云OSS做图床 | 小海哥Blog</title>
+<meta name="description" content="[&lt;a href=&#34;https://t.me/dapoolsea&#34; target=&#34;_blank&#34;&gt;Telegram&lt;/a&gt;|&lt;a href=&#34;https://1120.ren&#34; target=&#34;_blank&#34;&gt;博客+1&lt;/a&gt;|&lt;a href=&#34;https://212.ee&#34; target=&#34;_blank&#34;&gt;导航+1&lt;/a&gt;|&lt;a href=&#34;https://github.com/dapoolsea&#34; target=&#34;_blank&#34;&gt;github&lt;/a&gt;]">
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://dapoolsea.github.io/favicon.ico?v=1721054013775">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+<link rel="stylesheet" href="https://dapoolsea.github.io/styles/main.css">
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.5.1/build/highlight.min.js"></script>
+
+
+
+  </head>
+  <body>
+    <div id="app" class="main">
+      <div class="site-header-container">
+  <div class="site-header">
+    <div class="left">
+      <a href="https://dapoolsea.github.io">
+        <img class="avatar" src="https://dapoolsea.github.io/images/avatar.png?v=1721054013775" alt="" width="32px" height="32px">
+      </a>
+      <a href="https://dapoolsea.github.io">
+        <h1 class="site-title">小海哥Blog</h1>
+      </a>
+    </div>
+    <div class="right">
+      <transition name="fade">
+        <i class="icon" :class="{ 'icon-close-outline': menuVisible, 'icon-menu-outline': !menuVisible }" @click="menuVisible = !menuVisible"></i>
+      </transition>
+    </div>
+  </div>
+</div>
+
+<transition name="fade">
+  <div class="menu-container" style="display: none;" v-show="menuVisible">
+    <div class="menu-list">
+      
+        
+          <a href="/" class="menu purple-link">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="menu purple-link">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="menu purple-link">
+            标签
+          </a>
+        
+      
+        
+          <a href="/about" class="menu purple-link">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+</transition>
+
+
+      <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">使用CloudFlare白嫖阿里云OSS做图床</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2024-01-21</span>
+            
+          </div>
+          <div class="post-content" v-pre>
+            <h3 id="前言">前言</h3>
+<p>在写博客的时候经常会遇到不知道图片放哪里的尴尬处境。放公共图床没保障，万一那一天图床关停了，那你的图片就全部都没了到时候修改图片链接可以改到吐。使用付费的储存桶或者是储存空间来储存自己的图片使用起来感觉非常的棒，速度非常的快，而且非常的稳定有保障。但是费用是一个非常大的问题，要是遇到博客图片被刷的情况就是一夜一套房那就完了。</p>
+<p>无意中看到了阿里云正式加入Cloudflare带宽联盟可以白嫖对象储存，刚好可以解决我们博客图片的问题。(<a href="https://www.aliyun.com/product/news/detail?spm=5176.20947395.xingqu.1.6bbd2857lLqc4u&amp;id=17749">阿里云官网信息发布地址</a>)</p>
+<p>图片中的就是福利详情，可以看到送的东西根本用不完，别说一个博客了一个小型论坛也用不了这么多的资源。</p>
+<figure data-type="image" tabindex="1"><img src="https://img.212.ee/i/2022/11/26/031658-0.png" alt="" loading="lazy"></figure>
+<h3 id="准备工作">准备工作</h3>
+<p>1.一个阿里云国际版的账号</p>
+<blockquote>
+<p>已经询问过国内站的客服，只有国际版的阿里云账号才享受这个政策，国内的账号是不行的</p>
+</blockquote>
+<p>2.Cloudflare账号一个</p>
+<p>3.域名一个需要提前加入到Cloudflare账号中</p>
+<h3 id="部署过程">部署过程</h3>
+<h4 id="创建储存桶">创建储存桶</h4>
+<p>直接搜索oss → 开通oss → 开通Bucket</p>
+<figure data-type="image" tabindex="2"><img src="https://img.212.ee/i/2022/11/26/031443-0.png" alt="" loading="lazy"></figure>
+<p>按照下图的提示创建储存桶，修改好相关配置之后就可以点击确定创建储存桶了。</p>
+<figure data-type="image" tabindex="3"><img src="https://img.212.ee/i/2022/11/26/031328-0.png" alt="" loading="lazy"></figure>
+<h4 id="域名绑定">域名绑定</h4>
+<p>点击左边列表中的Bucket 列表，然后进入你刚刚创建的储存桶中，点击传输管理 → 域名管理 →绑定网域名称。</p>
+<figure data-type="image" tabindex="4"><img src="https://img.212.ee/i/2022/11/26/031514-0.png" alt="" loading="lazy"></figure>
+<p>这里填入你的域名或者是二级域名都行，添加完成后点击网域名称所有权验证，会让你添加TXT记录，到你的域名解析商处添加好记录点击验证。</p>
+<figure data-type="image" tabindex="5"><img src="https://img.212.ee/i/2022/11/26/031534-0.png" alt="" loading="lazy"></figure>
+<p>这里我添加freenom的免费域名一直添加不上，换成别的后缀域名就一下子成功了，托管有遇到一直添加TxT验证不通过可以换一个域名试试看。</p>
+<p>添加完域名如果你需要开启https需要在证书托管中上传你的域名证书，证书可以随便申请一个一年的。</p>
+<p>然后点击域名绑定配置就可以看到你刚刚添加的域名和回源域名，如下图所示</p>
+<figure data-type="image" tabindex="6"><img src="https://img.212.ee/i/2022/11/26/031548-0.png" alt="" loading="lazy"></figure>
+<p>在Cloudflare中添加上解析设置记得开始小云朵，否则是要计算流量的。添加完成后等一段时间就可以了使用了。</p>
+<h4 id="cloudflare域名规则设置推荐可选">Cloudflare域名规则设置（推荐/可选）</h4>
+<p>正常情况下是不需要添加页面规则的，但是如果不设置每一次访问你的图片都需要回源到阿里会比较的慢，添加页面规则可以直接加快访问。</p>
+<p>点击规则→创建页面规则填写： 域名/*</p>
+<p>然后按照下图设置一下规则就行，可以将浏览器缓存TTL和边缘缓存的时间设置长一点</p>
+<figure data-type="image" tabindex="7"><img src="https://img.212.ee/i/2022/11/26/031603-0.png" alt="" loading="lazy"></figure>
+<h3 id="使用体验">使用体验</h3>
+<p>总的来说使用情况是相当不错的，而且加载的速度也非常的快，我在多天中分别下载测试了一段时间，基本上所有的流量都被缓存下来了，阿里云上面也基本没有使用什么流量。标准型存储前5G是免费的，流量的话每个月也有5G免费的所以根本不用担心。</p>
+<p>阿里云国际站OSS定价网址：<a href="https://www.alibabacloud.com/zh/product/oss/pricing?spm=a2796.7973386.1834322160.1.3d1217988sJGQW%5D">点击前往</a></p>
+<blockquote>
+<p>阿里云储存桶流量和储存用量使用</p>
+</blockquote>
+<figure data-type="image" tabindex="8"><img src="https://img.212.ee/i/2022/11/26/031620-0.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>本文仅做收藏,原版请访问:<a href="https://www.tangshuwu.com/tutorials/110.html">棠树小屋</a></p>
+</blockquote>
+
+          </div>
+        </div>
+
+        
+          <div class="next-post">
+            <a class="purple-link" href="https://dapoolsea.github.io/URayULplc/">
+              <h3 class="post-title">
+                下一篇：使用国内服务器中转流量
+              </h3>
+            </a>
+          </div>
+          
+      </div>
+
+      
+
+      <div class="site-footer">
+  <div class="slogan">[<a href="https://t.me/dapoolsea" target="_blank">Telegram</a>|<a href="https://1120.ren" target="_blank">博客+1</a>|<a href="https://212.ee" target="_blank">导航+1</a>|<a href="https://github.com/dapoolsea" target="_blank">github</a>]</div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+  Powered by <a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://dapoolsea.github.io/atom.xml" target="_blank">RSS</a>
+</div>
+
+
+    </div>
+    <script type="application/javascript">
+
+hljs.initHighlightingOnLoad()
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,934 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://dapoolsea.github.io</id>
+    <title>小海哥Blog</title>
+    <updated>2024-07-15T14:33:41.090Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://dapoolsea.github.io"/>
+    <link rel="self" href="https://dapoolsea.github.io/atom.xml"/>
+    <subtitle>[&lt;a href=&quot;https://t.me/dapoolsea&quot; target=&quot;_blank&quot;&gt;Telegram&lt;/a&gt;|&lt;a href=&quot;https://1120.ren&quot; target=&quot;_blank&quot;&gt;博客+1&lt;/a&gt;|&lt;a href=&quot;https://212.ee&quot; target=&quot;_blank&quot;&gt;导航+1&lt;/a&gt;|&lt;a href=&quot;https://github.com/dapoolsea&quot; target=&quot;_blank&quot;&gt;github&lt;/a&gt;]</subtitle>
+    <logo>https://dapoolsea.github.io/images/avatar.png</logo>
+    <icon>https://dapoolsea.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2024, 小海哥Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Debian 配置静态IP&外网SSH登录]]></title>
+        <id>https://dapoolsea.github.io/debian-pei-zhi-jing-tai-ipandwai-wang-ssh-deng-lu/</id>
+        <link href="https://dapoolsea.github.io/debian-pei-zhi-jing-tai-ipandwai-wang-ssh-deng-lu/">
+        </link>
+        <updated>2024-07-12T14:36:55.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="1-查看虚拟机上本机ip">1. 查看虚拟机上本机ip</h3>
+<pre><code class="language-bash">ip addr
+</code></pre>
+<pre><code class="language-bash">cmd→ipconfig
+</code></pre>
+<h3 id="2-配置网卡">2. 配置网卡</h3>
+<h4 id="21-备份原有配置文件配置文件">2.1 备份原有配置文件配置文件</h4>
+<pre><code class="language-bash">cp /etc/network/interfaces /etc/network/interfacesbak   #备份原有配置
+</code></pre>
+<h4 id="22-编辑interfaces">2.2 编辑interfaces</h4>
+<pre><code class="language-bash">vim /etc/network/interfaces  #编辑网卡配置文件
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://img.212.ee/i/2022/11/06/171512-0.webp" alt="" loading="lazy"></figure>
+<blockquote>
+<p>修改后，注意后面的地址要放在最后面</p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://img.212.ee/i/2022/12/01/235259-0.webp" alt="" loading="lazy"></figure>
+<blockquote>
+<p>开机自动连接网络<br>
+auto lo</p>
+<p>static表示使用固定ip，dhcp表述使用动态ip<br>
+iface ens18 inet static</p>
+<p>设置ip地址<br>
+address 10.10.10.20</p>
+<p>设置子网掩码<br>
+netmask 255.255.255.0</p>
+<p>设置网关<br>
+gateway 10.10.10.253</p>
+</blockquote>
+<h4 id="23-查看确认修改无误">2.3 查看确认修改无误</h4>
+<pre><code class="language-bash">cat /etc/network/interfaces
+</code></pre>
+<figure data-type="image" tabindex="3"><img src="https://img.212.ee/i/2022/12/01/235259-0.webp" alt="" loading="lazy"></figure>
+<h4 id="24-重启网卡">2.4 重启网卡</h4>
+<pre><code class="language-bash">/etc/init.d/networking restart
+</code></pre>
+<h3 id="3-配置dns">3. 配置DNS</h3>
+<h4 id="31-备份dns配置文件">3.1 备份dns配置文件</h4>
+<pre><code class="language-bash">cp /etc/resolv.conf /etc/resolv.confbak #备份原有dns配置文件
+</code></pre>
+<h4 id="32-编辑配置文件">3.2  编辑配置文件</h4>
+<pre><code class="language-bash">vim /etc/resolv.conf
+</code></pre>
+<figure data-type="image" tabindex="4"><img src="https://img.212.ee/i/2022/11/06/172803-0.webp" alt="" loading="lazy"></figure>
+<h4 id="33-重启网络">3.3 重启网络</h4>
+<pre><code class="language-bash">service networking restart # 重启网络
+</code></pre>
+<h3 id="4-查询修改是否成功">4. 查询修改是否成功</h3>
+<pre><code class="language-bash">ip addr
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://img.212.ee/i/2022/11/06/173544-0.webp" alt="" loading="lazy"></figure>
+<blockquote>
+<p>看到ens18的地址通了<br>
+ping 10.10.10.1<br>
+ping www.baidu.com</p>
+</blockquote>
+<h3 id="5-配置外网ssh登录">5. 配置外网ssh登录</h3>
+<h4 id="51-利用vim打开并修改etcsshsshd_config文件">5.1 利用vim打开并修改/etc/ssh/sshd_config文件</h4>
+<blockquote>
+<p>将PermitRootLogin 设置为yes,PasswordAuthentication设置为yes即可，:wq保存退出即可。</p>
+</blockquote>
+<pre><code class="language-bash">vim /etc/ssh/sshd_config
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://img.212.ee/i/2022/12/01/233830-0.webp" alt="" loading="lazy"></figure>
+<h4 id="52-输入命令重启ssh服务器">5.2 输入命令，重启SSH服务器</h4>
+<pre><code class="language-bash">/etc/init.d/ssh restart
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SmokePing安装]]></title>
+        <id>https://dapoolsea.github.io/smokeping-an-zhuang/</id>
+        <link href="https://dapoolsea.github.io/smokeping-an-zhuang/">
+        </link>
+        <updated>2024-07-12T14:36:14.000Z</updated>
+        <content type="html"><![CDATA[<p>SmokePing是一个功能强大的延迟监测工具。它可以监测、存储和显示延迟、延迟的分布和数丢包。说白了一台服务器24小时内的表现如何，你发SmokePing的截图去怼老板，老板觉得不敢说怀疑你的数据。</p>
+<p>SmokePing可以玩的功能很多，也很强大，这个教程只是入门，确保大家用上最简单、也是最实用的功能，也就是对你的vps进行24小时的网络监控，分为国内三线（电信、联通、移动）以及国外部分监控。</p>
+<h2 id="安装方法">安装方法</h2>
+<h3 id="更改服务器时间">更改服务器时间</h3>
+<pre><code class="language-bash">timedatectl set-timezone Asia/Shanghai
+</code></pre>
+<h3 id="一键脚本">一键脚本</h3>
+<pre><code class="language-bash">bash -c &quot;$(curl -L https://github.com/jiuqi9997/smokeping/raw/main/main.sh)&quot;
+</code></pre>
+<p>脚本自动为 SmokePing 进行配置，可以自行按需修改。 SmokePing 主配置文件（包括目标节点）为</p>
+<blockquote>
+<p>/usr/local/smokeping/etc/config</p>
+</blockquote>
+<h3 id="docker-安装">docker 安装</h3>
+<h4 id="安装docker">安装docker</h4>
+<pre><code class="language-bash">curl -fsSL https://get.docker.com | bash -s docker
+</code></pre>
+<h4 id="复制一下代码">复制一下代码</h4>
+<pre><code class="language-bash">docker pull linuxserver/smokeping
+docker run -d \
+--name=smokeping \
+-e PUID=1000 \
+-e PGID=1000 \
+-e TZ=Asia/Shanghai \
+-p 9080:80 \
+-v /home/config/smokeping:/config \
+-v /home/data/smokeping:/data \
+--restart unless-stopped \
+linuxserver/smokeping
+</code></pre>
+<h4 id="更新监控服务器">更新监控服务器</h4>
+<blockquote>
+<p>路径 /home/config/smokeping/Targets</p>
+</blockquote>
+<pre><code class="language-bash">*** Targets ***
+
+probe = FPing
+
+menu = Top
+title = Network Latency Grapher
+remark = Welcome to the SmokePing website of WORKS Company. \
+         Here you will learn all about the latency of our network.
+
++ Other
+menu = 三大网络监控
+title = 监控统计
+
+
+++ CT
+
+menu = 电信网络监控
+title = 电信网络监控列表
+host = /Other/CT/CT-BJ /Other/CT/CT-SH /Other/CT/CT-GZ /Other/CT/CT-CD /Other/CT/CT-XA
+
++++ CT-BJ
+
+menu = 北京电信
+title = 北京电信
+alerts = someloss
+host = 45.126.112.36
+
++++ CT-SH
+
+menu = 上海电信
+title = 上海电信
+alerts = someloss
+host = 210.5.157.1
+
++++ CT-GZ
+
+menu = 广州电信
+title = 广州电信
+alerts = someloss
+host = 183.61.109.221
+
++++ CT-CD
+
+menu = 成都电信
+title = 成都电信
+alerts = someloss
+host = 118.113.198.158
+
++++ CT-XA
+
+menu = 西安电信
+title = 西安电信
+alerts = someloss
+host = 118.113.198.158
+
+
+++ CU
+
+menu = 联通网络监控
+title = 联通网络监控列表
+host = /Other/CU/CU-BJ /Other/CU/CU-SH /Other/CU/CU-GZ /Other/CU/CU-CD  /Other/CU/CU-HOME
+
++++ CU-BJ
+
+menu = 北京联通
+title = 北京联通
+alerts = someloss
+host = 61.135.169.121
+
++++ CU-SH
+
+menu = 上海联通
+title = 上海联通
+alerts = someloss
+host = 211.95.52.116
+
++++ CU-GZ
+
+menu = 广州联通
+title = 广州联通
+alerts = someloss
+host = 221.5.88.88
+
++++ CU-CD
+
+menu = 成都联通
+title = 成都联通
+alerts = someloss
+host = 119.6.6.6
+
+
++++ CU-HOME
+
+menu = 重庆联通
+title = 重庆联通
+alerts = someloss
+host = ip.212.ee
+
+++ CMCC
+
+menu = 移动网络监控
+title = 移动网络监控列表
+host = /Other/CMCC/CMCC-BJ /Other/CMCC/CMCC-SH /Other/CMCC/CMCC-GZ /Other/CMCC/CMCC-CD /Other/CMCC/CMCC-XA
+
++++ CMCC-BJ
+
+menu = 北京移动
+title = 北京移动
+alerts = someloss
+host = 221.130.33.52
+
++++ CMCC-SH
+
+menu = 上海移动
+title = 上海移动
+alerts = someloss
+host = 221.183.67.209
+
++++ CMCC-GZ
+
+menu = 广州移动
+title = 广州移动
+alerts = someloss
+host = 211.136.192.6
+
++++ CMCC-CD
+
+menu = 成都移动
+title = 成都移动
+alerts = someloss
+host = 218.201.4.3
+
++++ CMCC-XA
+
+menu = 西安移动
+title = 西安移动
+alerts = someloss
+host = 111.19.191.29
+
++ global
+menu = 国际线路
+title = 监控统计
+host = /global/cf /global/yt /global/gg /global/sbd /global/cmi /global/9929 /global/dmit37 /global/2222 /global/2C2G
+
+++ cf
+
+menu = Cloudflare
+title = Cloudflare
+alerts = someloss
+host = www.cloudflare.com
+
+++ yt
+
+menu = YouTube
+title = YouTube
+alerts = someloss
+host = www.youTube.com
+
+++ gg
+
+menu = google
+title = google
+alerts = someloss
+host = www.google.com
+
+++ sbd
+
+menu = 美国圣何塞
+title = 美国圣何塞
+alerts = someloss
+host = 209.209.57.3
+
+++ cmi
+
+menu = 香港CMI
+title = 香港CMI
+alerts = someloss
+host = 117.18.13.248
+
+++ 9929
+
+menu = 9929
+title = 9929
+alerts = someloss
+host = 154.40.54.193
+
+++ dmit37
+
+menu = dmit37
+title = dmit37
+alerts = someloss
+host = 154.17.19.194
+
+++ 2222
+
+menu = 2222
+title = 2222
+alerts = someloss
+host = 91.199.209.215
+
+++ 2C2G
+
+menu = 2C2G
+title = 2C2G
+alerts = someloss
+host = 149.104.26.230
+</code></pre>
+<h4 id="重启docker">重启docker</h4>
+<p>查询docker编号</p>
+<pre><code class="language-bash">docker ps
+docker restart id
+</code></pre>
+<pre><code class="language-bash">docker restart smokeping
+</code></pre>
+<blockquote>
+<p>转载至 https://ybfl.xyz/sites/46.html</p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Transmission、qBittorrent、Aria2手机、PC客户端]]></title>
+        <id>https://dapoolsea.github.io/transmissionqbittorrentaria2-shou-ji-pc-ke-hu-duan/</id>
+        <link href="https://dapoolsea.github.io/transmissionqbittorrentaria2-shou-ji-pc-ke-hu-duan/">
+        </link>
+        <updated>2024-07-12T14:27:07.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>Transdroid（手机客户端）</p>
+</blockquote>
+<p>支持Transmission、qBittorrent、Aria2、群晖下载、rTorrent等等</p>
+<p>官方网站：http://www.transdroid.org/</p>
+<p>注意：高级设定 里面要设置下端口号！！！</p>
+<hr>
+<blockquote>
+<p>Transmission Remote（手机客户端）</p>
+</blockquote>
+<p>只支持transmission</p>
+<p>开源地址：https://github.com/y-polek/TransmissionRemote</p>
+<hr>
+<blockquote>
+<p>transmission-remote-gui （Windows、macOS、linux客户端）</p>
+</blockquote>
+<p>只支持transmission</p>
+<p>开源地址：https://github.com/transmission-remote-gui/transgui</p>
+<hr>
+<blockquote>
+<p>引用自<a href="https://imnks.com/287.html">我不是矿神</a></p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[VPS 常用命令]]></title>
+        <id>https://dapoolsea.github.io/qAlC6DEGl/</id>
+        <link href="https://dapoolsea.github.io/qAlC6DEGl/">
+        </link>
+        <updated>2024-01-23T05:00:45.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="dd网络重装脚本">DD网络重装脚本</h4>
+<p>moeclub大佬的脚本</p>
+<pre><code>bash &lt;(wget --no-check-certificate -qO- 'https://raw.githubusercontent.com/MoeClub/Note/master/InstallNET.sh') -d 12 -v 64 -p 密码 -port 端口 -a -firmware
+</code></pre>
+<hr>
+<h4 id="服务器综合测试脚本融合怪">服务器综合测试脚本(融合怪)</h4>
+<pre><code>curl -L https://gitlab.com/spiritysdx/za/-/raw/main/ecs.sh -o ecs.sh &amp;&amp; chmod +x ecs.sh &amp;&amp; bash ecs.sh
+</code></pre>
+<hr>
+<h4 id="一键开启bbr">一键开启BBR</h4>
+<p>(适用于较新的Debian、Ubuntu)</p>
+<pre><code>echo &quot;net.core.default_qdisc=fq&quot; &gt;&gt; /etc/sysctl.conf
+echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &gt;&gt; /etc/sysctl.conf
+sysctl -p
+sysctl net.ipv4.tcp_available_congestion_control
+lsmod | grep bbr
+</code></pre>
+<hr>
+<h4 id="系统更新插件安装">系统更新&amp;插件安装</h4>
+<pre><code>apt-get update &amp;&amp; apt-get install -y wget vim sudo curl wget nano telnet
+</code></pre>
+<hr>
+<h4 id="切换时区">切换时区</h4>
+<pre><code>sudo timedatectl set-timezone Asia/Shanghai
+sudo timedatectl set-timezone America/Los_Angeles
+</code></pre>
+<hr>
+<h4 id="xray-xui搭建">xray-xui搭建</h4>
+<pre><code>bash &lt;(curl -Ls https://raw.githubusercontent.com/FranzKafkaYu/x-ui/master/install.sh)
+</code></pre>
+<h4 id="超售测试脚本">超售测试脚本</h4>
+<pre><code>wget --no-check-certificate -O memoryCheck.sh https://raw.githubusercontent.com/uselibrary/memoryCheck/main/memoryCheck.sh &amp;&amp; chmod +x memoryCheck.sh &amp;&amp; bash memoryCheck.sh
+</code></pre>
+<h4 id="移除virtio_balloon模块">移除virtio_balloon模块</h4>
+<pre><code>rmmod virtio_balloon
+</code></pre>
+<h4 id="moerats大佬的添加swap脚本">moerats大佬的添加swap脚本</h4>
+<pre><code>wget https://www.moerats.com/usr/shell/swap.sh &amp;&amp; bash swap.sh
+</code></pre>
+<h4 id="测试-ipv4-优先还是-ipv6-优先">测试 IPv4 优先还是 IPv6 优先</h4>
+<pre><code>curl ip.p3terx.com
+</code></pre>
+<h4 id="三网测速">三网测速</h4>
+<p>hyperspeed （未开源）</p>
+<pre><code>bash &lt;(curl -Lso- https://bench.im/hyperspeed)
+</code></pre>
+<p>AutoTrace 三网回程线路显示</p>
+<pre><code>wget -N --no-check-certificate https://raw.githubusercontent.com/Chennhaoo/Shell_Bash/master/AutoTrace.sh &amp;&amp; chmod +x AutoTrace.sh &amp;&amp; bash AutoTrace.sh
+</code></pre>
+<p>backtrace 三网回程线路直接显示（小白用这个）</p>
+<pre><code>curl https://raw.githubusercontent.com/zhanghanyun/backtrace/main/install.sh -sSf | sh
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Docker常用命令]]></title>
+        <id>https://dapoolsea.github.io/PlBT0KYRt/</id>
+        <link href="https://dapoolsea.github.io/PlBT0KYRt/">
+        </link>
+        <updated>2024-01-23T02:32:16.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="列出所有容器id">列出所有容器ID</h4>
+<pre><code>docker ps -aq
+</code></pre>
+<hr>
+<h4 id="查看所有运行或者不运行容器">查看所有运行或者不运行容器</h4>
+<pre><code>docker ps -a
+</code></pre>
+<hr>
+<h4 id="停止所有的container容器这样才能够删除其中的images">停止所有的container（容器），这样才能够删除其中的images：</h4>
+<pre><code>docker stop $(docker ps -a -q)
+</code></pre>
+<p>或者</p>
+<pre><code>docker stop $(docker ps -aq) 
+</code></pre>
+<hr>
+<h4 id="如果想要删除所有container容器的话再加一个指令">如果想要删除所有container（容器）的话再加一个指令：</h4>
+<pre><code>docker rm $(docker ps -a -q) 
+</code></pre>
+<p>或者</p>
+<pre><code>docker rm $(docker ps -aq) 
+</code></pre>
+<hr>
+<h4 id="查看当前有些什么images">查看当前有些什么images</h4>
+<pre><code>docker images
+</code></pre>
+<hr>
+<h4 id="删除images镜像通过image的id来指定删除谁">删除images（镜像），通过image的id来指定删除谁</h4>
+<pre><code>docker rmi &lt;image id&gt;
+</code></pre>
+<hr>
+<h4 id="想要删除untagged-images也就是那些id为的image的话可以用">想要删除untagged images，也就是那些id为的image的话可以用</h4>
+<pre><code>docker rmi $(docker images | grep &quot;^&lt;none&gt;&quot; | awk &quot;{print $3}&quot;)
+</code></pre>
+<hr>
+<h4 id="要删除全部image镜像的话">要删除全部image（镜像）的话</h4>
+<pre><code>docker rmi $(docker images -q)
+</code></pre>
+<hr>
+<h4 id="强制删除全部image的话">强制删除全部image的话</h4>
+<pre><code>docker rmi -f $(docker images -q)
+</code></pre>
+<hr>
+<h4 id="从容器到宿主机复制">从容器到宿主机复制</h4>
+<pre><code>docker cp tomcat：/webapps/js/text.js /home/admin
+docker  cp 容器名:  容器路径 宿主机路径
+</code></pre>
+<hr>
+<h4 id="从宿主机到容器复制">从宿主机到容器复制</h4>
+<pre><code>docker cp /home/admin/text.js tomcat：/webapps/js
+docker cp 宿主路径中文件      容器名  容器路径
+</code></pre>
+<hr>
+<h4 id="删除所有停止的容器">删除所有停止的容器</h4>
+<pre><code>docker container prune
+</code></pre>
+<hr>
+<h4 id="删除所有不使用的镜像">删除所有不使用的镜像</h4>
+<pre><code>docker image prune --force --all或者docker image prune -f -a
+</code></pre>
+<hr>
+<h4 id="停止-启动-杀死-重启一个容器">停止、启动、杀死、重启一个容器</h4>
+<pre><code>docker stop Name或者ID  
+docker start Name或者ID  
+docker kill Name或者ID  
+docker restart name或者ID
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Debian apt源]]></title>
+        <id>https://dapoolsea.github.io/LI6P4AS1l/</id>
+        <link href="https://dapoolsea.github.io/LI6P4AS1l/">
+        </link>
+        <updated>2024-01-21T07:12:26.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p><strong>如有必要请在修改的覆盖的操作前做好备份, 下面内容可按需复制或抄写，比如我一般只用中科大源</strong></p>
+</blockquote>
+<h3 id="1-修改文件-etcaptsourceslist-为下面内容">1. 修改文件 /etc/apt/sources.list 为下面内容</h3>
+<ul>
+<li><strong>下面内容中默认开启了中科大的源，请根据自己需求决定使用哪个源。 方法： 直接取消注释就好</strong></li>
+</ul>
+<pre><code class="language-bash"># Debian 10 buster
+
+# 中科大源
+
+deb http://mirrors.ustc.edu.cn/debian buster main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian buster-updates main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian buster-backports main contrib non-free
+deb http://mirrors.ustc.edu.cn/debian-security/ buster/updates main contrib non-free
+
+# deb-src http://mirrors.ustc.edu.cn/debian buster main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian buster-updates main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian buster-backports main contrib non-free
+# deb-src http://mirrors.ustc.edu.cn/debian-security/ buster/updates main contrib non-free
+
+# 官方源
+
+# deb http://deb.debian.org/debian buster main contrib non-free
+# deb http://deb.debian.org/debian buster-updates main contrib non-free
+# deb http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+
+# deb-src http://deb.debian.org/debian buster main contrib non-free
+# deb-src http://deb.debian.org/debian buster-updates main contrib non-free
+# deb-src http://deb.debian.org/debian-security/ buster/updates main contrib non-free
+
+# 网易源
+
+# deb http://mirrors.163.com/debian/ buster main non-free contrib
+# deb http://mirrors.163.com/debian/ buster-updates main non-free contrib
+# deb http://mirrors.163.com/debian/ buster-backports main non-free contrib
+# deb http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
+
+# deb-src http://mirrors.163.com/debian/ buster main non-free contrib
+# deb-src http://mirrors.163.com/debian/ buster-updates main non-free contrib
+# deb-src http://mirrors.163.com/debian/ buster-backports main non-free contrib
+# deb-src http://mirrors.163.com/debian-security/ buster/updates main non-free contrib
+
+# 阿里云
+
+# deb http://mirrors.aliyun.com/debian/ buster main non-free contrib
+# deb http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+# deb http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+# deb http://mirrors.aliyun.com/debian-security buster/updates main
+
+# deb-src http://mirrors.aliyun.com/debian/ buster main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ buster-updates main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian/ buster-backports main non-free contrib
+# deb-src http://mirrors.aliyun.com/debian-security buster/updates main
+</code></pre>
+<h3 id="2-直接用此文件覆盖掉源">2. 直接用此文件覆盖掉源</h3>
+<ul>
+<li><strong>更新软件列表并更新软件</strong></li>
+</ul>
+<pre><code class="language-bash">sudo apt update &amp;&amp; sudo apt upgrade -y
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[VPS服务器24小时Ping值延迟监测工具]]></title>
+        <id>https://dapoolsea.github.io/HJne16aHo/</id>
+        <link href="https://dapoolsea.github.io/HJne16aHo/">
+        </link>
+        <updated>2024-01-21T07:11:43.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="依赖安装">依赖安装</h3>
+<p><code>Debian</code>/<code>Ubuntu</code></p>
+<pre><code class="language-yaml">apt-get update
+
+apt-get install python wget screen -y
+</code></pre>
+<p><code>CentOS</code>/<code>RHEL</code></p>
+<pre><code class="language-yaml">yum install screen wget python -y
+</code></pre>
+<h3 id="使用方法">使用方法</h3>
+<pre><code class="language-yaml">screen -S uping
+
+wget -N --no-check-certificate https://raw.githubusercontent.com/FunctionClub/uPing/master/uping.py
+
+python uping.py
+</code></pre>
+<p><strong>提示：第一次使用如果出现乱码，退出后重新输入python uping.py即可；</strong></p>
+<h3 id="界面预览">界面预览</h3>
+<figure data-type="image" tabindex="1"><img src="https://img.212.ee/i/2022/11/04/034352-0.webp" alt="" loading="lazy"></figure>
+<h3 id="操作说明">操作说明</h3>
+<p><strong>退出界面：</strong><code>Ctrl + A + D</code><br>
+<strong>进入界面：</strong><code>screen -r uping</code><br>
+<strong>退出程序：</strong><code>Ctrl + C</code><br>
+<strong>查看screen进程：</strong><code>screen -ls</code><br>
+<strong>结束screen程序：</strong><code>exit</code></p>
+<p><strong>GitHub:</strong><a href="https://github.com/FunctionClub/uPing">https://github.com/FunctionClub/uPing</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[常用软件下载(持续更新)]]></title>
+        <id>https://dapoolsea.github.io/D4QIyUTXD/</id>
+        <link href="https://dapoolsea.github.io/D4QIyUTXD/">
+        </link>
+        <updated>2024-01-21T07:10:53.000Z</updated>
+        <content type="html"><![CDATA[<table>
+<thead>
+<tr>
+<th style="text-align:center">序 号</th>
+<th style="text-align:center">软件名称</th>
+<th>软件简介</th>
+<th style="text-align:center">平 台</th>
+<th style="text-align:center">下载网址</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">Snipaste</td>
+<td>简单便捷的截图软件</td>
+<td style="text-align:center">全平台</td>
+<td style="text-align:center"><a href="https://zh.snipaste.com">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">PicGo</td>
+<td>基于electron-vue 开发的图床工具</td>
+<td style="text-align:center">全平台</td>
+<td style="text-align:center"><a href="https://github.com/Molunerfinn/PicGo">Github</a></td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">Termius</td>
+<td>进口版远程终端</td>
+<td style="text-align:center">全平台</td>
+<td style="text-align:center"><a href="https://www.termius.com">官网</a><br><br><a href="https://wwx.lanzoui.com/b00zobsfe">蓝奏.密码:6uwy</a></td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">Ditto</td>
+<td>剪贴板神器(开源)</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="https://ditto-cp.sourceforge.io">官网</a><br><br><a href="https://github.com/sabrogden/Ditto">Github</a></td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">Geek</td>
+<td>卸载工具</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="https://geekuninstaller.com">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">6</td>
+<td style="text-align:center">Finalshell</td>
+<td>国产版远程终端</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="http://www.hostbuf.com">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">7</td>
+<td style="text-align:center">Notepad++</td>
+<td>文本编辑器</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="http://www.hostbuf.com">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">8</td>
+<td style="text-align:center">uTools</td>
+<td>新一代效率工具平台</td>
+<td style="text-align:center">全平台</td>
+<td style="text-align:center"><a href="https://www.u.tools">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">9</td>
+<td style="text-align:center">Listen 1</td>
+<td>免费各大平台听歌软件</td>
+<td style="text-align:center">全平台</td>
+<td style="text-align:center"><a href="https://listen1.github.io/listen1">Github</a></td>
+</tr>
+<tr>
+<td style="text-align:center">10</td>
+<td style="text-align:center">4K视频下载器</td>
+<td>看名字</td>
+<td style="text-align:center">全平台</td>
+<td style="text-align:center"><a href="https://www.4kdownload.com">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">11</td>
+<td style="text-align:center">一键远控</td>
+<td>远程控制类似向日葵</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="https://www.yijianyuankong.com">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">12</td>
+<td style="text-align:center">ohsoft绿色小软件</td>
+<td>视频录制,文件夹加密,虚拟DVD</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="https://ohsoft.net">官网</a></td>
+</tr>
+<tr>
+<td style="text-align:center">13</td>
+<td style="text-align:center">Eyes Guard</td>
+<td>护眼姬(开源)</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="https://github.com/avestura/EyesGuard">Github</a></td>
+</tr>
+<tr>
+<td style="text-align:center">14</td>
+<td style="text-align:center">MyComputerManager</td>
+<td>删除流氓快捷方式(开源)</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="https://github.com/1357310795/MyComputerManager">Github</a></td>
+</tr>
+<tr>
+<td style="text-align:center">15</td>
+<td style="text-align:center">ImageGlass</td>
+<td>支持80多种图片查看</td>
+<td style="text-align:center">win</td>
+<td style="text-align:center"><a href="https://imageglass.org/">官网</a></td>
+</tr>
+</tbody>
+</table>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用CloudFlare白嫖阿里云OSS做图床]]></title>
+        <id>https://dapoolsea.github.io/ANa9DmWIR/</id>
+        <link href="https://dapoolsea.github.io/ANa9DmWIR/">
+        </link>
+        <updated>2024-01-21T07:10:29.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="前言">前言</h3>
+<p>在写博客的时候经常会遇到不知道图片放哪里的尴尬处境。放公共图床没保障，万一那一天图床关停了，那你的图片就全部都没了到时候修改图片链接可以改到吐。使用付费的储存桶或者是储存空间来储存自己的图片使用起来感觉非常的棒，速度非常的快，而且非常的稳定有保障。但是费用是一个非常大的问题，要是遇到博客图片被刷的情况就是一夜一套房那就完了。</p>
+<p>无意中看到了阿里云正式加入Cloudflare带宽联盟可以白嫖对象储存，刚好可以解决我们博客图片的问题。(<a href="https://www.aliyun.com/product/news/detail?spm=5176.20947395.xingqu.1.6bbd2857lLqc4u&amp;id=17749">阿里云官网信息发布地址</a>)</p>
+<p>图片中的就是福利详情，可以看到送的东西根本用不完，别说一个博客了一个小型论坛也用不了这么多的资源。</p>
+<figure data-type="image" tabindex="1"><img src="https://img.212.ee/i/2022/11/26/031658-0.png" alt="" loading="lazy"></figure>
+<h3 id="准备工作">准备工作</h3>
+<p>1.一个阿里云国际版的账号</p>
+<blockquote>
+<p>已经询问过国内站的客服，只有国际版的阿里云账号才享受这个政策，国内的账号是不行的</p>
+</blockquote>
+<p>2.Cloudflare账号一个</p>
+<p>3.域名一个需要提前加入到Cloudflare账号中</p>
+<h3 id="部署过程">部署过程</h3>
+<h4 id="创建储存桶">创建储存桶</h4>
+<p>直接搜索oss → 开通oss → 开通Bucket</p>
+<figure data-type="image" tabindex="2"><img src="https://img.212.ee/i/2022/11/26/031443-0.png" alt="" loading="lazy"></figure>
+<p>按照下图的提示创建储存桶，修改好相关配置之后就可以点击确定创建储存桶了。</p>
+<figure data-type="image" tabindex="3"><img src="https://img.212.ee/i/2022/11/26/031328-0.png" alt="" loading="lazy"></figure>
+<h4 id="域名绑定">域名绑定</h4>
+<p>点击左边列表中的Bucket 列表，然后进入你刚刚创建的储存桶中，点击传输管理 → 域名管理 →绑定网域名称。</p>
+<figure data-type="image" tabindex="4"><img src="https://img.212.ee/i/2022/11/26/031514-0.png" alt="" loading="lazy"></figure>
+<p>这里填入你的域名或者是二级域名都行，添加完成后点击网域名称所有权验证，会让你添加TXT记录，到你的域名解析商处添加好记录点击验证。</p>
+<figure data-type="image" tabindex="5"><img src="https://img.212.ee/i/2022/11/26/031534-0.png" alt="" loading="lazy"></figure>
+<p>这里我添加freenom的免费域名一直添加不上，换成别的后缀域名就一下子成功了，托管有遇到一直添加TxT验证不通过可以换一个域名试试看。</p>
+<p>添加完域名如果你需要开启https需要在证书托管中上传你的域名证书，证书可以随便申请一个一年的。</p>
+<p>然后点击域名绑定配置就可以看到你刚刚添加的域名和回源域名，如下图所示</p>
+<figure data-type="image" tabindex="6"><img src="https://img.212.ee/i/2022/11/26/031548-0.png" alt="" loading="lazy"></figure>
+<p>在Cloudflare中添加上解析设置记得开始小云朵，否则是要计算流量的。添加完成后等一段时间就可以了使用了。</p>
+<h4 id="cloudflare域名规则设置推荐可选">Cloudflare域名规则设置（推荐/可选）</h4>
+<p>正常情况下是不需要添加页面规则的，但是如果不设置每一次访问你的图片都需要回源到阿里会比较的慢，添加页面规则可以直接加快访问。</p>
+<p>点击规则→创建页面规则填写： 域名/*</p>
+<p>然后按照下图设置一下规则就行，可以将浏览器缓存TTL和边缘缓存的时间设置长一点</p>
+<figure data-type="image" tabindex="7"><img src="https://img.212.ee/i/2022/11/26/031603-0.png" alt="" loading="lazy"></figure>
+<h3 id="使用体验">使用体验</h3>
+<p>总的来说使用情况是相当不错的，而且加载的速度也非常的快，我在多天中分别下载测试了一段时间，基本上所有的流量都被缓存下来了，阿里云上面也基本没有使用什么流量。标准型存储前5G是免费的，流量的话每个月也有5G免费的所以根本不用担心。</p>
+<p>阿里云国际站OSS定价网址：<a href="https://www.alibabacloud.com/zh/product/oss/pricing?spm=a2796.7973386.1834322160.1.3d1217988sJGQW%5D">点击前往</a></p>
+<blockquote>
+<p>阿里云储存桶流量和储存用量使用</p>
+</blockquote>
+<figure data-type="image" tabindex="8"><img src="https://img.212.ee/i/2022/11/26/031620-0.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p>本文仅做收藏,原版请访问:<a href="https://www.tangshuwu.com/tutorials/110.html">棠树小屋</a></p>
+</blockquote>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用国内服务器中转流量]]></title>
+        <id>https://dapoolsea.github.io/URayULplc/</id>
+        <link href="https://dapoolsea.github.io/URayULplc/">
+        </link>
+        <updated>2024-01-21T07:09:49.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>经本人亲身实践，通过国内服务器转发科学上网流量不仅能有效避免墙的干扰，还有加速的作用。流量转发说白了就是流量从“国内&lt;–&gt;境外vps”变成了“国内&lt;–&gt;国内vps&lt;–&gt;境外vps”。看似多了一步，其实大有好处：国内服务器延迟很低，但出入境流量走高级线路，加起来一算总延迟实际上降低了；此外选择好的中转服务器，高峰时期也能跑满带宽，爽的一批。</p>
+</blockquote>
+<blockquote>
+<p>中转属于 硬件加速 ，代价是额外需要一台国内的服务器，优点是更稳定、能（比较）有效防止境外ip或端口被封。一些付费工具的高级线路也使用中转，以提供更优质的体验。</p>
+</blockquote>
+<blockquote>
+<p>本教程详细介绍转发的过程，如有不明白的地方，欢迎留言讨论。</p>
+</blockquote>
+<blockquote>
+<p><strong>配置国内服务器中转流量</strong><br>
+既然要通过国内服务器转发流量，首先必须要一台国内服务器。国内服务器的选择有很多，建议使用NAT VPS，年付几十到一两百，NAT VPS中转请参考：使用NAT VPS中转加速。也可以用阿里云、腾讯云这些大厂商的服务器，质量和服务都比较有保障。由于服务器仅做流量转发用，买最低配置的就可以，1核256m内存足够，看视频的话带宽买大点，也可以选择流量计费模式（不适合视频党）。</p>
+</blockquote>
+<blockquote>
+<p>本文以CentOS 7/8系统为例介绍国内服务器中转配置，分别介绍firewalld流量转发和nginx流量转发两种方式。</p>
+</blockquote>
+<h3 id="1-firewalld流量转发">1. firewalld流量转发</h3>
+<p><code>firewalld</code>是CentOS7/8默认的防火墙前端软件，绝大多数主机商提供的镜像都已经安装。如果执行 <code>firewall-cmd --state</code>的输出不是 running，请使用下面命令安装并开启 <code>firewalld</code>：</p>
+<pre><code class="language-yaml">yum install -y firewalld
+systemctl enable firewalld
+systemctl start firewalld
+</code></pre>
+<ul>
+<li>接着配置转发。假设你将国内服务器8080端口流量转发到国外vps的443端口，转发命令如下：</li>
+</ul>
+<pre><code class="language-yaml">echo 'net.ipv4.ip_forward = 1' &gt;&gt; /etc/sysctl.conf
+sysctl -p
+firewall-cmd --permanent --add-masquerade
+# 8080可以改成其他端口
+firewall-cmd --permanent --add-port=8080/tcp
+firewall-cmd --permanent --add-port=8080/udp
+# 8080和上面保持一致，国外ip改成你国外vps的ip，443改成国外ss/ssr/v2ray等软件的端口
+firewall-cmd --permanent --add-forward-port=port=8080:proto=tcp:toaddr=国外ip:toport=443
+firewall-cmd --permanent --add-forward-port=port=8080:proto=udp:toaddr=国外ip:toport=443
+firewall-cmd --reload
+</code></pre>
+<ul>
+<li>运行上述命令后，打开ss/ssr/v2ray等客户端软件，把ip和端口 改成国内vps的ip和端口号，应该同样能正常上外网。</li>
+<li>如果中转trojan流量，记得把客户端配置文件中的两个verify选项设置为false</li>
+<li><code>firewalld</code>转发的好处是效率高，直接在内核执行。</li>
+</ul>
+<h3 id="2-nginx流量转发">2. Nginx流量转发</h3>
+<ul>
+<li>Nginx是非常强大的四层、七层反向代理软件，功能强大，在互联网上广泛应用。本节介绍Nginx转发配置。</li>
+</ul>
+<h4 id="首先安装nginx">首先安装nginx</h4>
+<pre><code class="language-yaml">yum install -y epel-release &amp;&amp; yum install -y nginx
+</code></pre>
+<h4 id="配置nginx编辑-etcnginxnginxconf文件加入转发配置">配置nginx：编辑 <code>/etc/nginx/nginx.conf</code>文件，加入转发配置：</h4>
+<pre><code class="language-yaml"># For more information on configuration, see:
+#   * Official English Documentation: http://nginx.org/en/docs/
+#   * Official Russian Documentation: http://nginx.org/ru/docs/
+
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+# Load dynamic modules. See /usr/share/doc/nginx/README.dynamic.
+include /usr/share/nginx/modules/*.conf;
+
+events {
+    worker_connections 1024;
+}
+
+# 增加的配置
+stream {
+    server {
+        listen 端口号;  # 1-65535的任意一个数字，无需与境外服务器的端口号相同
+        proxy_pass 境外ip:境外端口号; # 用境外ip和端口号替换
+    }
+}
+# 转发配置结束
+
+http {
+    log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
+                      '$status $body_bytes_sent &quot;$http_referer&quot; '
+                      '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
+
+    access_log  /var/log/nginx/access.log  main;
+
+    sendfile            on;
+    tcp_nopush          on;
+    tcp_nodelay         on;
+    keepalive_timeout   65;
+    types_hash_max_size 2048;
+    ....
+}
+</code></pre>
+<ul>
+<li>配置中增加了以 stream 开头的那一段，其他都是自带的。将上面代码中的ip和端口换成你的，然后保存文件。用 <code>nginx -t</code>检查配置有没有错误，有如下输出说明配置正确：</li>
+</ul>
+<pre><code class="language-yaml">nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+</code></pre>
+<ul>
+<li>如果有问题，请按照提示更改。</li>
+</ul>
+<h4 id="改好后设置开机启动并启动nginx">改好后设置开机启动并启动nginx</h4>
+<pre><code class="language-yaml">systemctl enable nginx &amp;&amp; systemctl start nginx。
+</code></pre>
+<p>接着用 <code>ss -ntlp| grep -i nginx</code>查看软件是否正常运行。如果输出为空，可能的问题是端口号冲突，改成其他端口号试试；或者是selinux的限制，用下面命令禁用selinux：</p>
+<pre><code class="language-yaml">sed -i 's/SELINUX=enforcing/SELINUX=permissive/g' /etc/selinux/config
+setenforce 0
+</code></pre>
+<h3 id="如果服务器启动了防火墙放行nginx监听的端口-怎么看防火墙是否开启呢输入-firewall-cmd-state输出是running表示防火墙正在运行-用如下命令把端口放行">如果服务器启动了防火墙，放行nginx监听的端口。怎么看防火墙是否开启呢？输入 <code>firewall-cmd --state</code>，输出是”running”表示防火墙正在运行。用如下命令把端口放行：</h3>
+<pre><code class="language-yaml">firewall-cmd --permanent --add-port=nginx中配置的端口号/tcp
+fireawll-cmd --reload
+</code></pre>
+<h3 id="如果服务器厂商上层还有防火墙安全组阿里云腾讯云等购买的vps请记得到控制台放行相应端口">如果服务器厂商上层还有防火墙/安全组(阿里云/腾讯云等购买的vps)，请记得到控制台放行相应端口。</h3>
+<p>完成上述操作后，搭建手机、电脑上的ss/ssr/v2ray等客户端，把ip和端口 改成国内vps的ip和端口号，应该同样能正常上外网。</p>
+<p>如果中转trojan流量，记得把客户端配置文件中的两个verify选项设置为false!<br>
+Nginx效率不如firewalld/iptables，但是配置更灵活，使用上更便利。</p>
+<h3 id="配置境外服务器">配置境外服务器</h3>
+<p>原则上只要境外服务器没被墙或者端口没有被封，配置好国内服务器就直接能用且有加速效果。对境外服务器做配置，主要是为了降低墙的干扰，减少ip被墙的机率。如果你不清楚下面的操作，请不要做这一步！**</p>
+<p>配置境外服务器的重点：除ssh的22、正常服务的端口(例如网站)，其他端口只允许国内服务器连接。操作如下：**</p>
+<ol>
+<li><strong>启动系统防火墙：</strong><code>systemctl enable firewalld &amp;&amp; systemctl start firewalld</code></li>
+<li><strong>删除之前放行过的ss/ssr/v2ray等端口（如果配置过）：</strong><code>firewall-cmd --permanent --remove-port=端口/tcp</code></li>
+<li><strong>仅允许国内ip连接该服务器：</strong></li>
+</ol>
+<pre><code class="language-yaml">firewall-cmd --permanent --add-source=国内ip/32
+fireawll-cmd --reload
+</code></pre>
+<p>经过如上配置后，gfw探测你的vps，除了ssh、网站等常用端口，ss/ssr/v2ray的端口直接无法连接，被墙的概率自然就降低了。</p>
+<h3 id="其他">其他</h3>
+<p><strong>一些注意事项：</strong></p>
+<p>nginx支持转发流量到多个服务器实现负载均衡，配置上需要用到upstream块，请参考文档或留言；<br>
+如果用的是iptables，把firewalld命令替换成iptables命令执行就可以<br>
+如果动手能力强，最好把境外vps配置得像一个业务机器，例如一个有各种爬虫访问的网站，基本上就稳如狗了（本人用的就是这种）；<br>
+配置客户端时，ip和端口填国内服务器的，其他信息（密码、加密方式等）和国外服务器保持一致；<br>
+NAT VPS需要端口映射，因此客户端配置的ip和端口应该是NAT VPS映射获取到的公网ip和端口号。</p>
+<blockquote>
+<p>**本篇仅做收藏使用，原文转自: **<a href="https://212.ee/go/jf1IbtNT/">V2ray科技-使用国内服务器中转流量</a></p>
+</blockquote>
+]]></content>
+    </entry>
+</feed>
